@@ -31,6 +31,7 @@ with its characteristics being:
 skimr::skim(pumpkin)
 ```
 
+```r
 ── Data Summary ────────────────────────
 Values
 Name pumpkin
@@ -75,7 +76,7 @@ skim_variable n_missing complete_rate mean sd p0 p25 p50 p75 p100 hist
 2 High.Price 0 1 133. 89.5 0.24 24.5 150 200 480 ▇▇▅▁▁
 3 Mostly.Low 103 0.941 128. 86.5 0.24 24.6 147 185 480 ▆▇▅▁▁
 4 Mostly.High 103 0.941 132. 88.4 0.24 26.1 150 200 480 ▆▇▅▁▁
-
+```
 ## TABLE OF CONTENTS
 
 As this is Version 0.1, this section is subject to change
