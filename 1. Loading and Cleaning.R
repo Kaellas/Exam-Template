@@ -1,6 +1,6 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# SECTION 2: LOADING AND CLEANING
+# SECTION 1: LOADING AND CLEANING
 # ──────────────────────────────────────────────────────────────────────────────
 #
 # Libraries used:
@@ -11,23 +11,25 @@ library(jsonlite)
 
 # SECTION TABLE OF CONTENTS
 #
-# 2. Loading and Cleaning
+# 
+# 1. Loading and Cleaning
 #     - Extraction
 #     - Exploration
 #     - Manipulations (incl. Common Problems)
 #     - Outliers
 #         - Detecing
-#         - Handling 
+#         - Handling
 #     - Normalisation/Centralisation
 #     - Standardisation
 #     - Missing Values
-#         - Detecting
+#         - Detection
 #         - Imputation
 #         - Deletion
 #     - Lumping
 #     - Dummy encoding
 #     - Label encoding
 #     - Writing Files
+# 
 #
 # ──────────────────────────────────────────────────────────────────────────────
 # EXTRACTION

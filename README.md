@@ -16,7 +16,7 @@ SCROLL DOWN FOR TABLE OF CONTENTS
 
 This template is meant to be used as a hub of building blocks
 
-When the exam is underway, read the problem, make a plan of the relevant actions your code will need to perform, then go to the respective sections (.R files) and copy the relevant code - do this a few times, and you will have created a code that should be up and running
+When the exam is underway, read the problem, make a plan of the relevant actions your code will need to perform, then go to the respective sections (.R files) and copy the relevant code - do this a few times,😄 and you will have created a code that should be up and running
 
 The dataset used during the exam will be US-pumpkins and the code will refer
 to simply it as "pumpkin":
@@ -86,36 +86,39 @@ As this is Version 0.1, this section is subject to change
     - Exploration
     - Manipulations (incl. Common Problems)
     - Outliers
-    - Detecing
-    - Handling
+        - Detecing
+        - Handling
     - Normalisation/Centralisation
     - Standardisation
     - Missing Values
-    - Detecting
-    - Imputation
-    - Deletion
+        - Detection
+        - Imputation
+        - Deletion
     - Lumping
     - Dummy encoding
     - Label encoding
     - Writing Files
+    
 2. Preparing the Parameters
     - Subset Selection
-    - Mallow's Cp
-    - Akaike Information Criterion
-    - Bayesian Information Criterion
-    - Backwards Stepwise
-    - Forwards Stepwise
+        - Mallow's Cp
+        - Akaike Information Criterion
+        - Bayesian Information Criterion
+        - Backwards Stepwise
+        - Forwards Stepwise
     - Shrinkage (Regularisation)
-    - Ridge Regression
-    - Lasso
+        - Ridge Regression
+        - Lasso
     - Sampling
     - Resampling
-    - LOOCV
-    - k-fold Cross Validation
-    - Bootstrap
+        - LOOCV
+        - k-fold Cross Validation
+        - Bootstrap
+        
 3. Numeric Models
     - K Nearest Neighbors (KNN)
     - Ordinary Linear Regression (OLS)
+    
 4. Categorical Models
     - Principal Component Analysis (PCA)
     - Logistic Regression
@@ -123,6 +126,6 @@ As this is Version 0.1, this section is subject to change
     - Quadratic Discriminant Analysis (QDA)
     - Lift Chart
     - Bayes Classifiers
-    - Exact
-    - Naive
+        - Exact
+        - Naive
 
