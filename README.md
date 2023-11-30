@@ -14,7 +14,7 @@ This template is meant to be used as a hub of building blocks
 When the exam is underway, read the problem, make a plan of the relevant actions your code will need to perform, then go to the respective sections (.R files) and copy the relevant code - do this a few times, and you will have created a code that should be up and running
 
 The dataset used during the exam will be US-pumpkins and the code will refer
-to simply it as "pumpkin":
+to simply it as "pumpkin"
 
 ## Need some more theoretical notes?
 
@@ -22,7 +22,7 @@ Is so, check out:
 
 [Machine Learning for Business Intelligence - Paweł Gach's Notion](https://pawelgach.notion.site/Machine-Learning-for-Business-Intelligence-d79e4896c6ef437280dcda846a8c2a25?pvs=4)
 
-## TABLE OF CONTENTS
+## Table Of Contents
 
 As this is not the final version, this section is subject to change
 
@@ -31,17 +31,17 @@ As this is not the final version, this section is subject to change
     - Exploration
     - Manipulations (incl. Common Problems)
     - Outliers
-        - Detecing
+        - Detecting
         - Handling
-    - Normalisation
+    - Normalisation (Transformations)
     - Standardisation
+    - Centralisation
     - Missing Values
         - Detection
         - Imputation
         - Deletion
     - Lumping
-    - Dummy encoding
-    - Label encoding
+    - Dummy Encoding
     - Writing Files
     
 2. Preparing the Parameters

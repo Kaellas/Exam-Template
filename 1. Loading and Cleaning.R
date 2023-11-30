@@ -12,6 +12,12 @@ library(ggplot2)
 library(readxl)
 library(jsonlite)
 library(stringr)
+library(scales)
+library(forecast)
+library(car)
+library(DataExplorer)
+library(forcats)
+library(writexl)
 
 # SECTION TABLE OF CONTENTS
 #
@@ -21,17 +27,17 @@ library(stringr)
 #     - Exploration
 #     - Manipulations (incl. Common Problems)
 #     - Outliers
-#         - Detecing
+#         - Detecting
 #         - Handling
-#     - Normalisation
+#     - Normalisation (Transformations)
 #     - Standardisation
+#     - Centralisation
 #     - Missing Values
 #         - Detection
 #         - Imputation
 #         - Deletion
 #     - Lumping
-#     - Dummy encoding
-#     - Label encoding
+#     - Dummy Encoding
 #     - Writing Files
 # 
 #
@@ -63,10 +69,10 @@ data <- jsonlite::fromJSON("filepath.json")
 
 View(pumpkin)
 
-# After that, I recommend the skimr library, as it 
+# After that, I recommend using library(skimr), as it 
 # returns the most important informations in one go
 
-skimr::skim(pumpkin)
+skim(pumpkin)
 
 # Other useful functions here include:
 
@@ -229,12 +235,183 @@ pumpkin <- pumpkin[-3, ] #delete the outlier row by indice (after finding it)
 pumpkin <- pumpkin[pumpkin$High.Price<=100, ] #delete outlier row by condition
 
 # You can also transform the whole column to normalise it which will limit
-# the impact of the dataset - look to Normalisation/Centralisation Section
+# the impact of the dataset - look to Normalisation (Transformations) Section
 
 # Another option is imputing them like you would with NAs - look to the
 # Missing Values - Imputation Section
 
 # ──────────────────────────────────────────────────────────────────────────────
-# NORMALISATION/CENTRALISATION
+# NORMALISATION (TRANSFORMATIONS)
 # ──────────────────────────────────────────────────────────────────────────────
 
+# This is the process of bringing the dataset closer to a normal distribution
+# It can be achieved with transformations
+
+# The Log transformation is included in R (since it means you just take a
+# logarithm)
+
+pumpkin_log <- log(pumpkin$High.Price)
+
+# The BoxCox transformation is from library(forecast)
+
+pumpkin_bc <- BoxCox(pumpkin$High.Price, lambda = "auto")
+
+# The YeoJohnson transformation is from library(car)
+
+pumpkin_yj <- yjPower(pumpkin$High.Price, 0)
+
+# After you carry out all the transformations, remember to
+# plot them and choose the best one!
+
+par(mfrow = c(2,2))
+hist(pumpkin$High.Price)
+hist(pumpkin_log)
+hist(pumpkin_bc)
+hist(pumpkin_yj)
+par(mfrow = c(1,1)) #remember to always reset the plot display
+
+# Use this handy function to instantly compare transformations
+
+plot_all_trans <- function(x) {
+  x_plots <- NULL
+  x_plots[1] <- hist(x, main = "Original Data")
+  x_plots[2] <- hist(log(x), main = "Log")
+  x_plots[3] <- hist(forecast::BoxCox(x, lambda = "auto"), main = "BoxCox")
+  x_plots[4] <- hist(car::yjPower(x, 0), main = "Yeo Johnson")
+  return(x_plots)
+}
+
+par(mfrow = c(2,2))
+plot_all_trans(pumpkin$High.Price)
+par(mfrow = c(1,1))
+
+# ──────────────────────────────────────────────────────────────────────────────
+# STANDARDISATION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# You can standardise (scake the data to values between -1 and 1) in two ways
+
+# the first one is your own function
+
+standardise <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+pumpkin$High.Price <- standardise(pumpkin$High.Price)
+
+# the second is an external function from library(scales)
+
+pumpkin$High.Price <- rescale(pumpkin$High.Price, to = c(0, 1))
+
+# You can also
+
+# ──────────────────────────────────────────────────────────────────────────────
+# CENTRALISATION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Centralisation means bringing your data to mean 0 and standard dev 1
+# There are also two ways here
+
+# own function
+
+centralise <- function(x) {
+  return((x - mean(x)) / sd(x))
+}
+
+pumpkin$High.Price <- centralise(pumpkin$High.Price)
+
+# another function from library(scales)
+
+pumpkin$High.Price <- scale(pumpkin$High.Price)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MISSING VALUES - DETECTION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# The presence and amount of missing values will already be included in
+# the output of skim(), but there are other ways
+
+sum(is.na(pumpkin$Mostly.High)) #returns amount of NAs
+which(is.na(pumpkin$Mostly.High)) #returns location of NAs
+# is.na returns TRUE whenever there is no value
+
+# You can also plot NAs with library(DataExplorer)
+plot_missing(pumpkin)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MISSING VALUES - IMPUTATION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Imputation can be carried out in a few ways
+
+# The first one is replacing it with mean or median
+
+x <- pumpkin$Mostly.High
+#I'm using x here as a shorthand to make the code more readable
+pumpkin$Mostly.High[is.na(x)] <- mean(x, na.rm = TRUE)
+pumpkin$Mostly.High[is.na(x)] <- median(x, na.rm = TRUE)
+
+# The second is just choosing a random value
+
+x <- pumpkin$Mostly.High
+pumpkin$Mostly.High[is.na(x)] <- sample(x[!is.na(x)], sum(is.na(x)), replace = TRUE)
+# The line above chooses a random value from non-na entries for each na entry
+# with replacement
+
+# The third is using K-Nearest Neighbours - check out Section 3 for that
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MISSING VALUES - DELETION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Deleting NAs is as simple as deleting the outliers in the previous section,
+# but it can be done a bit differently
+
+clean_pumpkin <- na.omit(pumpkin) # deletes all rows with NAs
+# IN CASE OF PUMPKIN, THIS WILL DELETE ALL ROWS UNLESS YOU REMOVE THE EMPTY
+# COLUMNS FIRST
+
+# before running na.omit(), make sure to check for the amount of complete rows
+sum(complete.cases(pumpkin))
+
+# ──────────────────────────────────────────────────────────────────────────────
+# LUMPING
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Lumping refers to grouping the rarest levels of a categorical variable into
+# a single "other" group
+
+# First, check the amount of entries for each group
+sort(tapply(pumpkin$City.Name, pumpkin$City.Name, length))
+
+# Then, you can use library(forcats) for lumping (forcats, not forecasts)
+
+pumpkin$City.Name <- fct_lump(pumpkin$City.Name, n = 5)
+# Keeps the top 'n' levels, lumps the rest into 'Other'
+
+# ──────────────────────────────────────────────────────────────────────────────
+# DUMMY ENCODING
+# ──────────────────────────────────────────────────────────────────────────────
+
+# This allows you to transform a column of categorical vars into several binary
+# columns. It can be useful when analysing the impact of only a single level
+# or when the model is purely numeric. model.matrix() is included in base R
+
+dummies <- model.matrix(~ Repack - 1, data = pumpkin)
+dummy_pumpkin <- cbind(pumpkin, dummies)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# WRITING FILES
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Write a dataframe to a CSV file
+write.csv(pumpkin, "pumpkin.csv", row.names = FALSE)
+
+# Write a dataframe to a text file
+write.table(pumpkin, "pumpkin.txt", row.names = FALSE, sep = "\t")
+
+# Writing to excel with library(writexl)
+write_xlsx(pumpkin, "pumpkin.xlsx")
+
+# Writing to JSON with library(jsonlite)
+write_json(pumpkin, "pumpkin.json")
