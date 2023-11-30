@@ -16,6 +16,12 @@ When the exam is underway, read the problem, make a plan of the relevant actions
 The dataset used during the exam will be US-pumpkins and the code will refer
 to simply it as "pumpkin":
 
+## Need some more theoretical notes?
+
+Is so, check out:
+
+[Machine Learning for Business Intelligence - Paweł Gach's Notion](https://pawelgach.notion.site/Machine-Learning-for-Business-Intelligence-d79e4896c6ef437280dcda846a8c2a25?pvs=4)
+
 ## TABLE OF CONTENTS
 
 As this is not the final version, this section is subject to change
@@ -27,7 +33,7 @@ As this is not the final version, this section is subject to change
     - Outliers
         - Detecing
         - Handling
-    - Normalisation/Centralisation
+    - Normalisation
     - Standardisation
     - Missing Values
         - Detection

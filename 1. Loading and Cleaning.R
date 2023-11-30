@@ -23,7 +23,7 @@ library(stringr)
 #     - Outliers
 #         - Detecing
 #         - Handling
-#     - Normalisation/Centralisation
+#     - Normalisation
 #     - Standardisation
 #     - Missing Values
 #         - Detection
@@ -209,7 +209,32 @@ ggplot(pumpkin, aes(x = High.Price, y = City.Name)) +
 
 z_scores <- scale(pumpkin$High.Price)  # scale() computes the Z-score
 outliers <- pumpkin$High.Price[abs(z_scores) > 3]  # try 2 or 3
+outlier_indices <- which(abs(z_scores) > 3)  # which() gets the row indices
 
 # You can also try
 max(pumpkin$High.Price)
+which(pumpkin$High.Price == max(pumpkin$High.Price))
+
 min(pumpkin$High.Price)
+which(pumpkin$High.Price == min(pumpkin$High.Price))
+
+# ──────────────────────────────────────────────────────────────────────────────
+# OUTLIERS - HANDLING
+# ──────────────────────────────────────────────────────────────────────────────
+
+# The easiest thing to do is to delete outliers - you need to delete the
+# entire row at once
+
+pumpkin <- pumpkin[-3, ] #delete the outlier row by indice (after finding it)
+pumpkin <- pumpkin[pumpkin$High.Price<=100, ] #delete outlier row by condition
+
+# You can also transform the whole column to normalise it which will limit
+# the impact of the dataset - look to Normalisation/Centralisation Section
+
+# Another option is imputing them like you would with NAs - look to the
+# Missing Values - Imputation Section
+
+# ──────────────────────────────────────────────────────────────────────────────
+# NORMALISATION/CENTRALISATION
+# ──────────────────────────────────────────────────────────────────────────────
+
