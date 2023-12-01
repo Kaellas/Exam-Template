@@ -1,6 +1,8 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
+#
 # SECTION 2: PREPARING THE PAREMETERS
+#
 # ──────────────────────────────────────────────────────────────────────────────
 #
 # Libraries used:
@@ -9,11 +11,11 @@
 #
 # 2. Preparing the Parameters
 #     - Subset Selection
+#         - Backwards Stepwise
+#         - Forwards Stepwise
 #         - Mallow's Cp
 #         - Akaike Information Criterion
 #         - Bayesian Information Criterion
-#         - Backwards Stepwise
-#         - Forwards Stepwise
 #     - Shrinkage (Regularisation)
 #         - Ridge Regression
 #         - Lasso
@@ -22,3 +24,9 @@
 #         - LOOCV
 #         - k-fold Cross Validation
 #         - Bootstrap
+#
+#
+# ──────────────────────────────────────────────────────────────────────────────
+# SUBSET SELECTION - MALLOW'S CP
+# ──────────────────────────────────────────────────────────────────────────────
+

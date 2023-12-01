@@ -18,6 +18,7 @@ library(car)
 library(DataExplorer)
 library(forcats)
 library(writexl)
+library(rsample)
 
 # SECTION TABLE OF CONTENTS
 #
@@ -39,7 +40,7 @@ library(writexl)
 #     - Lumping
 #     - Dummy Encoding
 #     - Writing Files
-# 
+#     - Sampling
 #
 # ──────────────────────────────────────────────────────────────────────────────
 # EXTRACTION
@@ -91,7 +92,7 @@ summary(pumpkin)
 str(pumpkin)
 #displays the structure of an object
 
-unique(pumpkin$Repack)
+unique(pumpkin$Package)
 #display all unique column elements
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -303,7 +304,7 @@ pumpkin$High.Price <- standardise(pumpkin$High.Price)
 
 pumpkin$High.Price <- rescale(pumpkin$High.Price, to = c(0, 1))
 
-# You can also
+# You can also 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # CENTRALISATION
@@ -415,3 +416,34 @@ write_xlsx(pumpkin, "pumpkin.xlsx")
 
 # Writing to JSON with library(jsonlite)
 write_json(pumpkin, "pumpkin.json")
+
+# ──────────────────────────────────────────────────────────────────────────────
+# SAMPLING
+# ──────────────────────────────────────────────────────────────────────────────
+
+# In the context of this class sampling refers to splitting the sample
+# into training and testing sets. This can be achieved in two main ways
+
+# Both will require you to set a seed, which ensures that despite the
+# presence of random functions, the outcome can be reproduced
+
+set.seed(123) # it doesn't really matter what number you choose here
+
+# the first method can be done in base R
+
+n <- nrow(pumpkin)
+shuffle <- sample(n) # generate a vector of shuffled row indices
+
+# Splitting into 70% training and 30% testing
+
+splitIndex <- round(n * 0.7) # rounding to ensure accuracy
+train <- data[shuffle[1:splitIndex], ]
+test <- data[shuffle[(splitIndex + 1):n], ]
+
+
+# the second method involves library(rsample)
+
+# Create a 70/30 split
+split <- initial_split(pumpkin, prop = 0.7)
+train <- training(split)
+test <- testing(split)

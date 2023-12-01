@@ -1,11 +1,11 @@
 # Exam Template
 Made by **Paweł Gach** with contributions from others
 
-1st semester Machine Learning at AU BSS
+1st semester Machine Learning and Business Forecasting at AU BSS
 
-Version 0.2
+Version 0.3
 
-2023-11-30
+2023-12-01
 
 ---
 
@@ -43,28 +43,33 @@ As this is not the final version, this section is subject to change
     - Lumping
     - Dummy Encoding
     - Writing Files
-    
-2. Preparing the Parameters
-    - Subset Selection
-        - Mallow's Cp
-        - Akaike Information Criterion
-        - Bayesian Information Criterion
-        - Backwards Stepwise
-        - Forwards Stepwise
-    - Shrinkage (Regularisation)
-        - Ridge Regression
-        - Lasso
     - Sampling
+    
+2. Regressing Models
+    - K Nearest Neighbors (KNN)
+    - Ordinary Linear Regression (OLS)
     - Resampling
         - LOOCV
         - k-fold Cross Validation
         - Bootstrap
-        
-3. Numeric Models
-    - K Nearest Neighbors (KNN)
-    - Ordinary Linear Regression (OLS)
+    - Shrinkage (Regularisation)
+        - Ridge Regression
+        - Lasso
+    - Subset Selection
+        - Backwards Stepwise
+        - Forwards Stepwise
+    - Model Evaluation
+        - R2 & adjusted R2
+        - MSE & MAE
+        - Accuracy, Precision, Recall
+        - F1-Score
+        - ROC and AUC
+        - Mallow's Cp
+        - Akaike Information Criterion
+        - Bayesian Information Criterion
+    - Recipes Package
     
-4. Categorical Models
+3. Categorical Models
     - Principal Component Analysis (PCA)
     - Logistic Regression
     - Linear Discriminant Analysis (LDA)
@@ -74,3 +79,9 @@ As this is not the final version, this section is subject to change
         - Exact
         - Naive
 
+4. Data Visualisation
+    - ggplot2
+    - this section will be expanded on later
+    
+5. Time Series (for Business Forecasting)
+    - this section will be expanded on later
