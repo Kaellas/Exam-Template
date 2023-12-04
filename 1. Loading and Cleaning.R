@@ -19,6 +19,7 @@ library(DataExplorer)
 library(forcats)
 library(writexl)
 library(rsample)
+library(Hmisc)
 
 # SECTION TABLE OF CONTENTS
 #
@@ -104,6 +105,9 @@ subset(pumpkin, High.Price > 100)
 
 pumpkin$Repack <- factor(pumpkin$Repack)
 # turn characters into numerical factors that models understand
+
+colnames(pumpkin) <- tolower(colnames(pumpkin))
+# turn column names to lowercase
 
 tapply(pumpkin$High.Price, pumpkin$City.Name, mean)
 # apply functions to grouped columns for quick analysis
@@ -290,7 +294,7 @@ par(mfrow = c(1,1))
 # STANDARDISATION
 # ──────────────────────────────────────────────────────────────────────────────
 
-# You can standardise (scake the data to values between -1 and 1) in two ways
+# You can standardise (scale the data to values between -1 and 1) in two ways
 
 # the first one is your own function
 
@@ -359,7 +363,13 @@ pumpkin$Mostly.High[is.na(x)] <- sample(x[!is.na(x)], sum(is.na(x)), replace = T
 # The line above chooses a random value from non-na entries for each na entry
 # with replacement
 
-# The third is using K-Nearest Neighbours - check out Section 3 for that
+# The third one takes advantage of library(Hmisc), but it requires the data
+# to be a factor
+
+pumpkin$Mostly.High <- impute(as.factor(pumpkin$Mostly.High))
+
+# The fourth is using K-Nearest Neighbours - check out the section on the 
+# Recipes Package for more details
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MISSING VALUES - DELETION
@@ -447,3 +457,4 @@ test <- data[shuffle[(splitIndex + 1):n], ]
 split <- initial_split(pumpkin, prop = 0.7)
 train <- training(split)
 test <- testing(split)
+
