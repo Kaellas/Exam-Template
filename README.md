@@ -3,9 +3,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Machine Learning and Business Forecasting at AU BSS
 
-Version 0.3.5
+Version 0.4
 
-2023-12-04
+2023-12-05
 
 ---
 
