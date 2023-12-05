@@ -52,6 +52,7 @@ As this is not the final version, this section is subject to change
         - LOOCV
         - k-fold Cross Validation
         - Bootstrap
+    - Principal Component Analysis (PCA)
     - Shrinkage (Regularisation)
         - Ridge Regression
         - Lasso
@@ -61,16 +62,11 @@ As this is not the final version, this section is subject to change
     - Model Evaluation
         - R2 & adjusted R2
         - MSE & MAE
-        - Accuracy, Precision, Recall
-        - F1-Score
-        - ROC and AUC
         - Mallow's Cp
         - Akaike Information Criterion
         - Bayesian Information Criterion
-    - Recipes Package
     
 3. Categorical Models
-    - Principal Component Analysis (PCA)
     - Logistic Regression
     - Linear Discriminant Analysis (LDA)
     - Quadratic Discriminant Analysis (QDA)
@@ -78,9 +74,14 @@ As this is not the final version, this section is subject to change
     - Bayes Classifiers
         - Exact
         - Naive
+    - Model Evaluation
+        - Accuracy, Precision, Recall
+        - F1-Score
+        - ROC and AUC
 
-4. Data Visualisation
+4. Data Visualisation & Automatisation
     - ggplot2
+    - Recipes Package
     - this section will be expanded on later
     
 5. Time Series (for Business Forecasting)

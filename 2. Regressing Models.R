@@ -11,6 +11,7 @@ library(caret)
 library(stats)
 library(GGally)
 library(glmnet)
+library(Metrics)
 
 # SECTION TABLE OF CONTENTS
 #
@@ -21,6 +22,7 @@ library(glmnet)
 #         - LOOCV
 #         - k-fold Cross Validation
 #         - Bootstrap
+#     - Principal Component Analysis (PCA)
 #     - Shrinkage (Regularisation)
 #         - Ridge Regression
 #         - Lasso
@@ -30,13 +32,9 @@ library(glmnet)
 #     - Model Evaluation
 #         - R2 & adjusted R2
 #         - MSE & MAE
-#         - Accuracy, Precision, Recall
-#         - F1-Score
-#         - ROC and AUC
 #         - Mallow's Cp
 #         - Akaike Information Criterion
 #         - Bayesian Information Criterion
-#     - Recipes Package
 #
 #
 # ──────────────────────────────────────────────────────────────────────────────
@@ -194,6 +192,29 @@ boot_model
 summary(boot_model)
 
 # ──────────────────────────────────────────────────────────────────────────────
+# PRINCIPAL COMPONENT ANALYSIS (PCA)
+# ──────────────────────────────────────────────────────────────────────────────
+
+# This will theoretically allow us to "collapse" highly correlated predictors
+# into one variable (or just choose the most significant one and ditch the rest)
+
+# eliminating non-numeric columns and NAs to prepare for PCA:
+pca_train <- train[, sapply(train, is.numeric)]
+x <- pca_train$Mostly.High
+y <- pca_train$Mostly.Low
+pca_train$Mostly.High[is.na(x)] <- mean(x, na.rm = TRUE)
+pca_train$Mostly.Low[is.na(y)] <- mean(y, na.rm = TRUE)
+
+# Then we can use the base function prcomp()
+pca_result <- prcomp(pca_train, scale = TRUE)
+
+# Then extract the result
+summary(pca_result)
+plot(pca_result)
+
+# based on that, we can decide which components to keep
+
+# ──────────────────────────────────────────────────────────────────────────────
 # SHRINKAGE (REGULARISATION) - RIDGE REGRESSION
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -272,3 +293,70 @@ summary(forward_model)
 # MODEL EVALUATION - R2 & ADJUSTED R2
 # ──────────────────────────────────────────────────────────────────────────────
 
+# These are usually given by calling the model and/or its summary
+
+model <- lm(High.Price ~ Low.Price, data = train) # or other models
+model
+summary(model)
+
+# they can also be directly extracted from the model object (at least lm())
+summary(model)$r.squared
+summary(model)$adj.r.squared
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MODEL EVALUATION - MSE & MAE
+# ──────────────────────────────────────────────────────────────────────────────
+
+# you can get the Mean Squared Error and the Mean Absolute Error 
+# with library(Metrics)
+
+predictions <- predict(model, newdata = test)
+mse(test$High.Price, predictions) # first the actual, then the predicted
+mae(test$High.Price, predictions)
+
+# it can also be done manually
+mean((test$High.Price - predictions)^2) # mse
+mean(abs(test$High.Price - predictions)) # mae
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MODEL EVALUATION - MALLOW'S CP
+# ──────────────────────────────────────────────────────────────────────────────
+
+# can be calculated manually from the output of the AIC function from
+# library(stats)
+
+p <- length(coef(model)) # Fetch number of predictors (incl. intercept)
+AIC(model) - (2 * p) + (2 * length(train$High.Price))
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MODEL EVALUATION - AKAIKE INFORMATION CRITERION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# from the aforementioned function
+AIC(model)
+
+# can be done manually too
+n <- nrow(train) # Number of observations
+p <- length(coef(model)) # the same p as in the above section
+residuals_sq <- sum((test$High.Price - predictions)^2)
+log_likelihood <- -n/2 * (log(2 * pi) + log(residuals_sq / n) + 1)
+
+aic <- 2*p - 2*log_likelihood
+aic
+
+# but the manual method is mathematically complex and will often return
+# wrong results for different model types (and often different than just
+# using AIC() )
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MODEL EVALUATION - BAYESIAN INFORMATION CRITERION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# similarly simple
+BIC(model)
+
+# using the code above, it is also possible to get BIC manually
+bic <- log(n)*p - 2*log_likelihood
+bic
+
+# but it also has similiar accuracy problems

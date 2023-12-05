@@ -106,6 +106,12 @@ subset(pumpkin, High.Price > 100)
 pumpkin$Repack <- factor(pumpkin$Repack)
 # turn characters into numerical factors that models understand
 
+cols <- c("City.Name", "Variety", "Origin")
+for (col in cols) {
+  pumpkin[[col]] <- factor(pumpkin[[col]])
+}
+# you can also do a few at a time
+
 colnames(pumpkin) <- tolower(colnames(pumpkin))
 # turn column names to lowercase
 
@@ -126,6 +132,10 @@ pumpkin$Crop <- NULL
 pumpkin <- pumpkin[, -23]
 pumpkin <- pumpkin[, -c(21:22)]
 pumpkin <- subset(pumpkin, select = -c(Quality, Condition))
+
+# You can also select a given group that will be retained, while all
+# else will be deleted
+pumpkin <- pumpkin[, c("City.Name", "Variety", "Origin")]
 
 #
 
@@ -237,7 +247,8 @@ which(pumpkin$High.Price == min(pumpkin$High.Price))
 # entire row at once
 
 pumpkin <- pumpkin[-3, ] #delete the outlier row by indice (after finding it)
-pumpkin <- pumpkin[pumpkin$High.Price<=100, ] #delete outlier row by condition
+pumpkin <- pumpkin[pumpkin$High.Price<=100, ] 
+# delete outlier row by condition (or rather, keep those that match condition)
 
 # You can also transform the whole column to normalise it which will limit
 # the impact of the dataset - look to Normalisation (Transformations) Section
