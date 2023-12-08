@@ -1,20 +1,22 @@
 # Exam Template
+
 Made by **Paweł Gach** with contributions from others
 
-1st semester Machine Learning and Business Forecasting at AU BSS
+1st semester Business Intelligence at AU BSS
 
-Version 0.4
+Version 0.5
 
-2023-12-05
+2023-12-08
 
----
+------------------------------------------------------------------------
 
 This template is meant to be used as a hub of building blocks
 
-When the exam is underway, read the problem, make a plan of the relevant actions your code will need to perform, then go to the respective sections (.R files) and copy the relevant code - do this a few times, and you will have created a code that should be up and running
+When the exam is underway, read the problem, make a plan of the relevant actions your code will need to perform, then go to the respective sections (.R files) and copy the relevant code - do this a few times, and you will have created a code that should be up and running and (reasonably) bug-free
 
-The dataset used during the exam will be US-pumpkins and the code will refer
-to simply it as "pumpkin"
+The dataset used during the Machine Learning exam will be US-pumpkins.csv and the code will refer to simply it as "pumpkin". Sections relevant to ML are 1 through 4.
+
+The code also includes two sections, 1 and 5, relevant for Business Forecasting, as well as subsections helpful for the R elements of the DMDV exam in Section 4.
 
 ## Need some more theoretical notes?
 
@@ -26,63 +28,59 @@ Is so, check out:
 
 As this is not the final version, this section is subject to change
 
-1. Loading and Cleaning
-    - Extraction
-    - Exploration
-    - Manipulations (incl. Common Problems)
-    - Outliers
-        - Detecting
-        - Handling
-    - Normalisation (Transformations)
-    - Standardisation
-    - Centralisation
-    - Missing Values
-        - Detection
-        - Imputation
-        - Deletion
-    - Lumping
-    - Dummy Encoding
-    - Writing Files
-    - Sampling
-    
-2. Regressing Models
-    - K Nearest Neighbors (KNN)
-    - Ordinary Linear Regression (OLS)
-    - Resampling
-        - LOOCV
-        - k-fold Cross Validation
-        - Bootstrap
-    - Principal Component Analysis (PCA)
-    - Shrinkage (Regularisation)
-        - Ridge Regression
-        - Lasso
-    - Subset Selection
-        - Backwards Stepwise
-        - Forwards Stepwise
-    - Model Evaluation
-        - R2 & adjusted R2
-        - MSE & MAE
-        - Mallow's Cp
-        - Akaike Information Criterion
-        - Bayesian Information Criterion
-    
-3. Categorical Models
-    - Logistic Regression
-    - Linear Discriminant Analysis (LDA)
-    - Quadratic Discriminant Analysis (QDA)
-    - Lift Chart
-    - Bayes Classifiers
-        - Exact
-        - Naive
-    - Model Evaluation
-        - Accuracy, Precision, Recall
-        - F1-Score
-        - ROC and AUC
-
-4. Data Visualisation & Automatisation
-    - ggplot2
-    - Recipes Package
-    - this section will be expanded on later
-    
-5. Time Series (for Business Forecasting)
-    - this section will be expanded on later
+1.  Loading and Cleaning
+    -   Extraction
+    -   Exploration
+    -   Manipulations (incl. Common Problems)
+    -   Outliers
+        -   Detecting
+        -   Handling
+    -   Normalisation (Transformations)
+    -   Standardisation
+    -   Centralisation
+    -   Missing Values
+        -   Detection
+        -   Imputation
+        -   Deletion
+    -   Lumping
+    -   Dummy Encoding
+    -   Writing Files
+    -   Sampling
+2.  Regressing Models
+    -   K Nearest Neighbors (KNN)
+    -   Ordinary Linear Regression (OLS)
+    -   Resampling
+        -   LOOCV
+        -   k-fold Cross Validation
+        -   Bootstrap
+    -   Principal Component Analysis (PCA)
+    -   Shrinkage (Regularisation)
+        -   Ridge Regression
+        -   Lasso
+    -   Subset Selection
+        -   Backwards Stepwise
+        -   Forwards Stepwise
+    -   Model Evaluation
+        -   R2 & adjusted R2
+        -   MSE & MAE
+        -   Mallow's Cp
+        -   Akaike Information Criterion
+        -   Bayesian Information Criterion
+3.  Categorical Models
+    -   Logistic Regression
+    -   Linear Discriminant Analysis (LDA)
+    -   Quadratic Discriminant Analysis (QDA)
+    -   Naive Bayes Classifier
+    -   Model Evaluation
+        -   Accuracy, Precision, Recall
+        -   F1-Score
+        -   ROC and AUC
+        -   Lift Chart
+4.  Data Visualisation & Automatisation
+    -   ggplot2 Package
+    -   recipes Package
+    -   shiny Package
+    -   cronR Package
+    -   httr2 Package (API calls)
+5.  Time Series
+    -   this section will be expanded on later
