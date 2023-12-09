@@ -529,8 +529,8 @@ psql_append_df <- function(cred, schema_name, tab_name, df){
 }
 
 # Then you can execute the code in another file while calling them with:
-source(credentials.R)
-source(psql_queries.R)
+source("credentials.R")
+source("psql_queries.R")
 # (make sure they are in the same directory)
 
 # and you can connect to the database as such:
