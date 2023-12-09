@@ -4,9 +4,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Business Intelligence at AU BSS
 
-Version 0.5
+Version 1.0
 
-2023-12-08
+2023-12-09
 
 ------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ The code also includes two sections, 1 and 5, relevant for Business Forecasting,
 
 Is so, check out:
 
-[Machine Learning for Business Intelligence - Paweł Gach's Notion](https://pawelgach.notion.site/Machine-Learning-for-Business-Intelligence-d79e4896c6ef437280dcda846a8c2a25?pvs=4)
+[Machine Learning for Business Intelligence - Paweł Gach's Notion](https://www.notion.so/pawelgach/Aarhus-Uni-Home-91aeb930754247b098340fbc6616b777?pvs=4)
 
 ## Table Of Contents
 
@@ -76,11 +76,12 @@ As this is not the final version, this section is subject to change
         -   F1-Score
         -   ROC and AUC
         -   Lift Chart
-4.  Data Visualisation & Automatisation
+4.  Data Visualisation & Automation
     -   ggplot2 Package
     -   recipes Package
     -   shiny Package
     -   cronR Package
     -   httr2 Package (API calls)
+    -   DBI and RPostgres Packages (Database Integration)
 5.  Time Series
-    -   this section will be expanded on later
+    -   this section will be expanded on before the BF exam
