@@ -4,9 +4,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Business Intelligence at AU BSS
 
-Version 1.0
+Version 1.1
 
-2023-12-09
+2023-12-28
 
 ------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ As this is not the final version, this section is subject to change
     -   Dummy Encoding
     -   Writing Files
     -   Sampling
-2.  Regressing Models
+2.  Regression Models
     -   K Nearest Neighbors (KNN)
     -   Ordinary Linear Regression (OLS)
     -   Resampling
@@ -85,3 +85,6 @@ As this is not the final version, this section is subject to change
     -   DBI and RPostgres Packages (Database Integration)
 5.  Time Series
     -   this section will be expanded on before the BF exam
+6.  Appendix: Applied Data Work Exercises
+    -   Ana's Set
+    -   Ben's Set

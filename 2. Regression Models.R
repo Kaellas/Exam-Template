@@ -1,7 +1,7 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
 #
-# SECTION 2: REGRESSING MODELS
+# SECTION 2: REGRESSION MODELS
 #
 # ──────────────────────────────────────────────────────────────────────────────
 #
@@ -15,7 +15,7 @@ library(Metrics)
 
 # SECTION TABLE OF CONTENTS
 #
-# 2. Regressing Models
+# 2. Regression Models
 #     - K Nearest Neighbors (KNN)
 #     - Ordinary Linear Regression (OLS)
 #     - Resampling

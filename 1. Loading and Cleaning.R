@@ -49,7 +49,8 @@ library(Hmisc)
 #
 # Extracting US-pumpkins is simple can be done in one line:
 
-pumpkin <- read.csv("US-pumpkins.csv")
+pumpkin <- read.csv("US-pumpkins.csv", stringsAsFactors = T)
+# strings as Factors makes all non-numeric columns factors or logical values
 
 # If the need arises, you can also read files using:
 
@@ -289,17 +290,15 @@ par(mfrow = c(1,1)) #remember to always reset the plot display
 # Use this handy function to instantly compare transformations
 
 plot_all_trans <- function(x) {
-  x_plots <- NULL
-  x_plots[1] <- hist(x, main = "Original Data")
-  x_plots[2] <- hist(log(x), main = "Log")
-  x_plots[3] <- hist(forecast::BoxCox(x, lambda = "auto"), main = "BoxCox")
-  x_plots[4] <- hist(car::yjPower(x, 0), main = "Yeo Johnson")
-  return(x_plots)
+  par(mfrow = c(2,2))
+  hist(x, main = "Original Data")
+  hist(log(x), main = "Log")
+  hist(forecast::BoxCox(x, lambda = "auto"), main = "BoxCox")
+  hist(car::yjPower(x, 0), main = "Yeo Johnson")
+  par(mfrow = c(1,1))
 }
 
-par(mfrow = c(2,2))
 plot_all_trans(pumpkin$High.Price)
-par(mfrow = c(1,1))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # STANDARDISATION
@@ -350,6 +349,10 @@ pumpkin$High.Price <- scale(pumpkin$High.Price)
 sum(is.na(pumpkin$Mostly.High)) #returns amount of NAs
 which(is.na(pumpkin$Mostly.High)) #returns location of NAs
 # is.na returns TRUE whenever there is no value
+
+sum(pumpkin$Type == "")
+which(pumpkin$Type == "")
+# is.na() equivalent for factor columns which contain ""
 
 # You can also plot NAs with library(DataExplorer)
 plot_missing(pumpkin)

@@ -108,6 +108,12 @@ rec <- recipe(High.Price ~ Low.Price + Mostly.Low, data = pumpkin) %>%
 # add different preprocessing steps to the recipe:
 # (can be used on all or only specified predictors)
 
+# Remove columns
+step_rm(X, X.1)
+
+# Apply Manipulations
+step_mutate(AvgPrice = (Low.Price + High.Price) / 2)
+
 # Factorisation
 step_factor()
 
