@@ -4,9 +4,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Business Intelligence at AU BSS
 
-Version 1.1
+Version 1.2
 
-2023-12-28
+2023-12-30
 
 ------------------------------------------------------------------------
 

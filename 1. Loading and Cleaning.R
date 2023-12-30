@@ -406,7 +406,7 @@ sum(complete.cases(pumpkin))
 # Lumping refers to grouping the rarest levels of a categorical variable into
 # a single "other" group
 
-# First, check the amount of entries for each group
+# First, check the sum of each unique entry for each group
 sort(tapply(pumpkin$City.Name, pumpkin$City.Name, length))
 
 # Then, you can use library(forcats) for lumping (forcats, not forecasts)

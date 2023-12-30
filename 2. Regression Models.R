@@ -252,7 +252,7 @@ predict(cv_ridge_model, test_x)
 # Lasso can be carried out identically, with the only difference being the alpha
 # is equal to 1, not 0
 
-cv_ridge_model <- cv.glmnet(x, y, alpha = 1)
+cv_lasso_model <- cv.glmnet(x, y, alpha = 1)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SUBSET SELECTION - BACKWARDS STEPWISE
