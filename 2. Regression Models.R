@@ -35,8 +35,40 @@ library(Metrics)
 #         - Mallow's Cp
 #         - Akaike Information Criterion
 #         - Bayesian Information Criterion
+#         - Log Likelihood
 #
 #
+# ──────────────────────────────────────────────────────────────────────────────
+# WRITING THE FORMULA
+# ──────────────────────────────────────────────────────────────────────────────
+
+# There are multiple ways to declare a formula for the various model functions:
+
+model <- lm(response ~ predictor, data)
+# response against one predictor
+
+model <- lm(response ~ predictor1 + predictor2, data)
+# response against two or more predictors
+
+model <- lm(response ~ ., data)
+# response against all predictors
+
+model <- lm(response ~ NULL, data)
+# response against NO predictors (only intercept)
+
+model <- lm(response ~ .^2, data)
+# response against all predictors AND all first-order interactions
+
+model <- lm(response ~ predictor1:predictor2, data)
+# response against JUST the first order interaction of two predictors
+
+model <- lm(response ~ predictor1 * predictor2 * predictor3, data)
+# response against main effects, first order interactions and three way interaction
+# of three predictors
+
+model <- lm(response ~ . -unwanted_predictor, data)
+# response against all predictors except one or more
+
 # ──────────────────────────────────────────────────────────────────────────────
 # K NEAREST NEIGHBOURS (KNN)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -360,3 +392,39 @@ bic <- log(n)*p - 2*log_likelihood
 bic
 
 # but it also has similiar accuracy problems
+
+# ──────────────────────────────────────────────────────────────────────────────
+# MODEL EVALUATION - LOG LIKELIHOOD
+# ──────────────────────────────────────────────────────────────────────────────
+
+# For most simple functions like glm, lm and lr, you can get in-sample
+# log likelihood from this function
+
+logLik(model)
+
+# otherwise, you can calculate it like this:
+
+calculate_log_likelihood <- function(model, data) {
+  
+  response_var <- names(model$model)[1]
+  # fetch the name of the response variable from the model object
+  
+  # Predicting the response variable using the provided model and data
+  predictions <- predict(model, newdata = data)
+  
+  # Calculating residuals
+  residuals <- data[[response_var]] - predictions
+  
+  # Assuming normally distributed errors
+  # Calculate the log-likelihood
+  n <- length(residuals)
+  sigma_hat <- sqrt(sum(residuals^2) / n)
+  log_likelihood <- -n/2 * log(2 * pi) - n/2 * log(sigma_hat^2) - sum(residuals^2) / (2 * sigma_hat^2)
+  
+  return(log_likelihood)
+}
+
+calculate_log_likelihood(model, train)
+calculate_log_likelihood(model, test)
+# you can use this function to calculate both in sample (train set) and out
+# of sample (test set) log-likelihood

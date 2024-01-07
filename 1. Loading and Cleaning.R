@@ -10,10 +10,12 @@
 library(skimr)
 library(ggplot2)
 library(readxl)
+library(dplyr)
 library(jsonlite)
 library(stringr)
 library(scales)
 library(forecast)
+library(fastDummies)
 library(car)
 library(DataExplorer)
 library(forcats)
@@ -215,6 +217,17 @@ class(pumpkin$Date)
 
 pumpkin$Date <- as.Date(pumpkin$Date, format = "%m/%d/%y")
 # we specify the format for the as.Date() function
+
+# MUTATE TO BINARY
+# function from library(dplyr)
+
+# Example from another exam:
+df <- df %>%
+  mutate(
+    popular = ifelse(Popularity > 3000, 1, 0),
+    cylinder = ifelse(Engine.Cylinders > 5, 1, 0)
+  )
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # OUTLIERS - DETECTING
@@ -424,6 +437,12 @@ pumpkin$City.Name <- fct_lump(pumpkin$City.Name, n = 5)
 
 dummies <- model.matrix(~ Repack - 1, data = pumpkin)
 dummy_pumpkin <- cbind(pumpkin, dummies)
+
+# You can also try this function from library(fastDummies)
+
+df <- dummy_cols(df, select_columns = c("factor1", "factor2"), remove_first_dummy = TRUE)
+# this function creates columns of dummified variables with no multicollinearity
+# since it omits the first category
 
 # ──────────────────────────────────────────────────────────────────────────────
 # WRITING FILES

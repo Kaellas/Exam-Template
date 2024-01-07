@@ -19,6 +19,7 @@ library(pROC)
 #
 # 
 # 3. Categorical Models
+#     - Discretization
 #     - Logistic Regression
 #     - Linear Discriminant Analysis (LDA)
 #     - Quadratic Discriminant Analysis (QDA)
@@ -29,6 +30,21 @@ library(pROC)
 #         - ROC and AUC
 #         - Lift Chart
 #
+# ──────────────────────────────────────────────────────────────────────────────
+# DISCRETIZATION
+# ──────────────────────────────────────────────────────────────────────────────
+
+# When you need to do categorical prdiction on a numeric variable, you need
+# to disretize it first
+
+pumpkin$High.Price <- cut(pumpkin$High.Price, breaks = 5)
+# Separate into five equal bins
+
+pumpkin$High.Price <- cut(pumpkin$High.Price,
+                          breaks = c(-Inf, mean(pumpkin$High.Price), Inf),
+                          labels = c("Low","High"))
+# Separete into bins according to certain values
+
 # ──────────────────────────────────────────────────────────────────────────────
 # LOGISTIC REGRESSION
 # ──────────────────────────────────────────────────────────────────────────────
@@ -41,7 +57,7 @@ for (col in cols) {
   pumpkin[[col]] <- fct_lump(pumpkin[[col]], n = 5)
 }
 
-pumpkin <- pumpkin[, cols]
+pumpkin <- pumpkin[, c("City.Name", "Variety", "Origin", "Repack", "High.Price")]
 
 split <- initial_split(pumpkin, prop = 0.7)
 train <- training(split)
@@ -50,7 +66,7 @@ test <- testing(split)
 # and we will also only retain the categorical columns
 
 # Logistic regression can be easily performed with a function library(stats)
-lr_model <- glm(Repack ~ ., data = train, family = "binomial")
+lr_model <- glm(High.Price ~ ., data = train, family = "binomial")
 
 # extracting the results:
 summary(lr_model)
@@ -62,14 +78,14 @@ probabilities <- predict(lr_model, newdata = test, type = "response")
 lr_pred <- ifelse(probabilities > 0.5, 1, 0)
 
 # display the total amount of each class
-table(test$Repack, lr_pred)
+table(test$High.Price, lr_pred)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # LINEAR DISCRIMINANT ANALYSIS (LDA)
 # ──────────────────────────────────────────────────────────────────────────────
 
 # a simple function from library(MASS)
-lda_model <- lda(Repack ~ ., data = train)
+lda_model <- lda(High.Price ~ ., data = train)
 
 # in this case you should just call the model without summary()
 lda_model
@@ -81,7 +97,7 @@ plot(lda_model)
 # it tells you when the model predicted the class accurately (e.g. E as E)
 # and when it made a blunder (e.g. identified E as N)
 lda_pred <- predict(lda_model, newdata = test)
-table(test$Repack, lda_pred$class)
+table(test$High.Price, lda_pred$class)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # QUADRATIC DISCRIMINANT ANALYSIS (QDA)

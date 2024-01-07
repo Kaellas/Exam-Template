@@ -140,6 +140,7 @@ step_normalize(all_numeric())
 # Missing values (NAs)
 step_naomit() # delete rows with Nas
 step_impute_mean(all_predictors()) # impute with mean (or other options)
+step_impute_knn(neighbors = 5) # impute with knn and set neighbors
 
 # Lumping
 step_other(Variable, threshold = 0.1)

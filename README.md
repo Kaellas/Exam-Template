@@ -4,9 +4,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Business Intelligence at AU BSS
 
-Version 1.2
+Version 1.3
 
-2023-12-30
+2024-01-07
 
 ------------------------------------------------------------------------
 
@@ -66,7 +66,9 @@ As this is not the final version, this section is subject to change
         -   Mallow's Cp
         -   Akaike Information Criterion
         -   Bayesian Information Criterion
+        -   Log Likelihood
 3.  Categorical Models
+    -   Discretization
     -   Logistic Regression
     -   Linear Discriminant Analysis (LDA)
     -   Quadratic Discriminant Analysis (QDA)
@@ -83,8 +85,37 @@ As this is not the final version, this section is subject to change
     -   cronR Package
     -   httr2 Package (API calls)
     -   DBI and RPostgres Packages (Database Integration)
-5.  Time Series
-    -   this section will be expanded on before the BF exam
+5.  Time Series Models
+    -   Simple Forecasts
+        -   Previous observed value
+        -   Previous value + proportion of previously observed change
+        -   Lagged Forecast
+        -   Averages
+        -   Weighed Forecasts
+    -   Moving Averages
+        -   Single
+        -   Double
+    -   Exponential Smoothening
+        -   Normal
+        -   Holt's
+        -   Winter's
+    -   Linear Regression
+    -   Time Series Decomposition
+    -   ARIMA
+    -   ADL Models
+    -   VAR Models
+    -   IRF Cholesky Models
+    -   Non-stationary tests
+        -   ADF
+        -   EG
+    -   Combining forecasts
+        -   Simple Averaging
+        -   Weighted Averaging
+        -   Nelson Combination
+        -   Granger-Ramanathan Combination Method
+    -   Model Evaluation
+        -   Accuracy
+        -   Diebold-Mariano
 6.  Appendix: Applied Data Work Exercises
     -   Ana's Set
     -   Ben's Set
