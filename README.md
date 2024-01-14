@@ -4,9 +4,9 @@ Made by **Paweł Gach** with contributions from others
 
 1st semester Business Intelligence at AU BSS
 
-Version 1.3
+Version 1.4
 
-2024-01-07
+2024-01-14
 
 ------------------------------------------------------------------------
 
@@ -86,6 +86,8 @@ As this is not the final version, this section is subject to change
     -   httr2 Package (API calls)
     -   DBI and RPostgres Packages (Database Integration)
 5.  Time Series Models
+    -   Loading and Splitting TS Objects
+    -   Analysing Dynamic Properties
     -   Simple Forecasts
         -   Previous observed value
         -   Previous value + proportion of previously observed change
@@ -108,6 +110,8 @@ As this is not the final version, this section is subject to change
     -   Non-stationary tests
         -   ADF
         -   EG
+        -   BP
+        -   JB
     -   Combining forecasts
         -   Simple Averaging
         -   Weighted Averaging

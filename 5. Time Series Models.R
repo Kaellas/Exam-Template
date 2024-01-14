@@ -7,16 +7,20 @@
 #
 # Libraries used:
 
+library(GGally)
 library(dplyr)
 library(forecast)
 library(ARDL)
 library(vars)
 library(tseries)
+library(glmnet)
 
 # SECTION TABLE OF CONTENTS
 #
 # 
 # 5.  Time Series Models
+#     -   Loading and Splitting TS Objects
+#     -   Analysing Dynamic Properties
 #     -   Simple Forecasts
 #         -   Previous observed value
 #         -   Previous value + proportion of previously observed change
@@ -36,9 +40,11 @@ library(tseries)
 #     -   ADL Models
 #     -   VAR Models
 #     -   IRF Cholesky Models
-#     -   Non-stationary tests
+#     -   Tests
 #         -   ADF
 #         -   EG
+#         -   BP
+#         -   JB
 #     -   Combining forecasts
 #         -   Simple Averaging
 #         -   Weighted Averaging
@@ -49,38 +55,82 @@ library(tseries)
 #         -   Diebold-Mariano
 # 
 # ──────────────────────────────────────────────────────────────────────────────
-# INTRODUCTION
+# LOADING AND SPLITTING TS OBJECTS
 # ──────────────────────────────────────────────────────────────────────────────
+
+# to load from an external source, use
+data <- readxl::read_excel("filepath.xlsx")
+
+# to define it as a ts object, use
+data <- as.data.frame(ts(data, frequency = 7))
+# REMEMBER to change frequency!
 
 # Before we begin, the dataset used in this section will be AirPassengers
 
 air <- AirPassengers
 
 # We will later use Seatbelts
-
 seat <- Seatbelts
 
 # and to split a time series object into training and testing, we can use:
 train <- window(Seatbelts, end = c(1977, 9))
 test <- window(Seatbelts, start = c(1977, 9))
 
+
 # If you need to split a time series object along a specific fraction (e.g. 70%)
-start_time <- start(seat) # January 1969
-frequency <- frequency(seat) # Monthly data
 
-# Calculate the index for the 70% mark
-total_length <- length(seat)
-split_index <- round(total_length * 0.7)
+split_time_series <- function(time_series, split_ratio = 0.7) {
 
-# Convert this index back to a date
-years_passed <- (split_index - 1) / frequency / dim(seat)[2]
-months_passed <- (split_index - 1) %% frequency
-start_year <- start_time[1] + years_passed
-start_month <- start_time[2] + months_passed
+  start_time <- start(time_series)
+  frequency <- frequency(time_series)
+  total_length <- nrow(time_series)
+  
+  # Calculate the index for the split
+  split_index <- round(total_length * split_ratio)
+  
+  # Calculate the year and month for the split
+  split_year <- start_time[1] + (split_index - 1) %/% frequency
+  split_month <- start_time[2] + (split_index - 1) %% frequency
+  
+  # Split the data using window()
+  train <- window(time_series, end = c(split_year, split_month))
+  test <- window(time_series, start = c(split_year, split_month+1))
+  
+  return(list(train = train, test = test))
+}
 
-# Use window() to get the subset
-train <- window(Seatbelts, end = c(start_year, start_month))
-test <- window(Seatbelts, start = c(start_year, start_month))
+split <- split_time_series(Seatbelts, 0.7)
+train <- split$train
+test <- split$test
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ANALYSING DYNAMIC PROPERTIES
+# ──────────────────────────────────────────────────────────────────────────────
+
+plot(air)
+# generate a plot and insoect the highs and lows of the dataset
+
+acf(air)
+# generate a plot of the autocorrelation function, check whether current values
+# are influenced by current values
+
+pacf(air)
+# generate a plot of the partial ACF, 
+
+tsdisplay(air)
+# To plot the data, ACF and PACF all together
+
+frequency(air)
+# check the frequency of the dataset (only ts objects)
+
+# from library(GGally):
+
+ggpairs(air)
+ggpairs(seat[,"drivers"])
+# correlation plot of all variables in a univariate time series
+
+ggpairs(as.data.frame(seat))
+# same for multivariate time series
 
 # ──────────────────────────────────────────────────────────────────────────────
 # SIMPLE FORECASTS - PREVIOUS OBSERVED VALUE
@@ -165,9 +215,10 @@ single_ma(air, 4)
 double_ma <- function(ts_data, n) {
   # First moving average
   first_ma <- single_ma(ts_data, n)
+  first_result <- c(ts_data, first_ma)
   
   # Second moving average applied to the first
-  second_ma <- single_ma(first_ma, n)
+  second_ma <- single_ma(first_result, n)
   
   return(second_ma)
 }
@@ -206,7 +257,7 @@ hw <- HoltWinters(air, alpha = NULL, beta = NULL, gamma = NULL)
 # (Don't run this, just an example)
 
 # and then to forecast
-forecast(hw)
+forecast::forecast(hw)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # LINEAR REGRESSION
@@ -223,17 +274,21 @@ linear <- lm(air ~ time)
 
 summary(linear)
 
-# We need a more complex dataset for analyses from now on, we can use:
+# For Seatbelts, static regression looks like this:
 fit <- tslm(drivers ~ ., train)
 summary(fit)
 
 # To obtain a forecast, use:
-forecast(fit, as.data.frame(test))
+forecast::forecast(fit, as.data.frame(test))
 
-# It's also possible to pass trend as season to the formula
+# It's also possible to pass trend as season to the formula to make a dynamic
+# regression:
 fit2 <- tslm(drivers ~ trend + season, train)
 summary(fit2)
-forecast(fit2)
+forecast::forecast(fit2)
+
+plot(forecast::forecast(fit2))
+# you can also plot forecast objects
 
 # ──────────────────────────────────────────────────────────────────────────────
 # TIME SERIES DECOMPOSITION
@@ -247,6 +302,23 @@ plot(decomposed)
 decomposed$trend
 decomposed$seasonal
 decomposed$random
+
+# you can also plot them
+plot(decomposed$trend)
+
+# Additive Model: Use this when the seasonal variations are roughly constant 
+# over time. In an additive model, the components are simply added together.
+
+# Multiplicative Model: Use this when the seasonal variations are changing
+# proportionally with the level of the time series. In a multiplicative model, 
+# the components are multiplied together.
+
+# Plot your time series data and look at the pattern. If the amplitude (height)
+# of the seasonal fluctuations or the variability of the series appears to be 
+# increasing with the level of the time series, a multiplicative model might be
+# more appropriate. Conversely, if the seasonal fluctuations or variability 
+# appear to be stable over time, regardless of the level of the series, an 
+# additive model might be more suitable.
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ARIMA
@@ -265,7 +337,7 @@ arima2 <- Arima(seat[,"drivers"],
 summary(arima2)
 
 # and to forecast
-forecast(arima)
+forecast::forecast(arima)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # ADL MODELS
@@ -276,6 +348,27 @@ Auto_ADL <- auto_ardl(drivers ~ PetrolPrice + kms, train, max_order = 5)
 
 # If you need to specify the order, you can use:
 ADL <- ARDL::ardl(drivers ~ PetrolPrice + kms, train, order = c(5,5,5))
+
+
+# to generate a model that can be predicted:
+
+# prepare data for the model
+model_data <- as.data.frame(train[, c("drivers", "kms", "PetrolPrice")])
+
+# Fit the model
+dLagARDL <- dLagM::ardlDlm(formula = drivers ~ kms + PetrolPrice, 
+                           data = model_data, 
+                           p = 5, q = 5)
+
+# Prepare the test data
+test_data <- as.data.frame(test[, c("kms", "PetrolPrice")])
+test_matrix <- t(as.matrix(test_data))
+
+# Forecast
+forecast <- dLagM::forecast(dLagARDL, x = test_matrix, h = dim(test_matrix)[2])
+
+# Calculaing the accuracy of the forecast
+forecast::accuracy(as.vector(forecast$forecasts), test[,"drivers"])
 
 # ──────────────────────────────────────────────────────────────────────────────
 # VAR MODELS
@@ -288,27 +381,51 @@ summary(fit_var)
 # to choose the right 'p', use:
 VARselect(seat, lag.max = 10, type="const")
 
+# forecast
+forecast::forecast(fit_var)
+
 # ──────────────────────────────────────────────────────────────────────────────
 # IRF CHOLESKY MODELS
 # ──────────────────────────────────────────────────────────────────────────────
 
-# Another function from library(vars) to forecast with a var model
+# Another function from library(vars) to predict the impact of shocks to a 
+# single variable according to a VAR model
 irf_var <- irf(fit_var, impulse = "drivers", response = "PetrolPrice", n.ahead = 10)
 plot(irf_var)
 
 # ──────────────────────────────────────────────────────────────────────────────
-# NON-STATIONARY TESTS - ADF
+# TESTS - ADF
 # ──────────────────────────────────────────────────────────────────────────────
 
 # I'll be using library(tseries)
 adf.test(seat[,"drivers"])
 
+# perform and Augmented Dickey Fuller test to determine whether the time series
+# is stationary or not. 
+
+# If p-value is below the significance level, it is stationary
+
 # ──────────────────────────────────────────────────────────────────────────────
-# NON-STATIONARY TESTS - EG
+# TESTS - EG
 # ──────────────────────────────────────────────────────────────────────────────
 
 # Another function from library(tseries) which performs a two step EG test
 po.test(seat[, c("drivers", "PetrolPrice")])
+
+# ──────────────────────────────────────────────────────────────────────────────
+# TESTS - BP
+# ──────────────────────────────────────────────────────────────────────────────
+
+# The Breusch-Pagan test is used to detect the presence of heteroskedasticity 
+# in a regression model
+lmtest::bptest(fit)
+
+# ──────────────────────────────────────────────────────────────────────────────
+# TESTS - JB
+# ──────────────────────────────────────────────────────────────────────────────
+
+# The Jarque-Bera is used to check for normality
+tseries::jarque.bera.test(residuals(fit))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # COMBINING FORECASTS - SIMPLE AVERAGING
@@ -360,18 +477,22 @@ combine_forecasts_nelson <- function(outsamp, fcast1, fcast2) {
               accuracy = forecast_accuracy))
 }
 
-# make two models
+# make example models
 hw <- HoltWinters(train[,"drivers"])
 arima <- auto.arima(train[,"drivers"])
+tslm1 <- tslm(drivers ~ ., train)
+tslm2 <- tslm(drivers ~ kms + PetrolPrice, train)
 
-# make two forecasts
-forecast1 <- forecast(hw, h = dim(test)[1])
-forecast2 <- forecast(arima, h = dim(test)[1])
+# example forecasts
+forecast1 <- forecast::forecast(model1, as.data.frame(test))
+forecast2 <- forecast::forecast(model2, as.data.frame(test))
+forecast3 <- forecast(hw, h = dim(test)[1])
+forecast4 <- forecast(arima, h = dim(test)[1])
 
 # combine 
 result <- combine_forecasts_nelson(test[,"drivers"],
                                    forecast1$mean,
-                                   forecast2$mean)
+                                   forecast4$mean)
 
 result
 
@@ -405,7 +526,7 @@ combine_forecasts_GR <- function(outsamp, fcast1, fcast2) {
 
 # combine two previously made forecasts
 result <- combine_forecasts_GR(test[,"drivers"],
-                                   forecast1$mean,
+                                   forecast4$mean,
                                    forecast2$mean)
 
 result
@@ -416,15 +537,16 @@ result
 
 # You can get the vast majority of required accuracy parameters with:
 
-accuracy(arima)
+forecast::accuracy(arima)
 # called on a model object (for insample/training errors)
 
-accuracy(forecast1, test[,"drivers"])
+forecast::accuracy(forecast4, test[,"drivers"])
 # called on a forecast object and actual values (for outsample/testing errors)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MODEL EVALUATION - DIEBOLD-MARIANO
 # ──────────────────────────────────────────────────────────────────────────────
 
-# This test is included in library(forecast)
+# This test is included in library(forecast), it is ued for checking which
+# model is better
 dm.test(forecast1$residuals, forecast2$residuals, h = dim(test)[1])
