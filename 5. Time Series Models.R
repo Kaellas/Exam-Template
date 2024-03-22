@@ -484,8 +484,8 @@ tslm1 <- tslm(drivers ~ ., train)
 tslm2 <- tslm(drivers ~ kms + PetrolPrice, train)
 
 # example forecasts
-forecast1 <- forecast::forecast(model1, as.data.frame(test))
-forecast2 <- forecast::forecast(model2, as.data.frame(test))
+forecast1 <- forecast::forecast(tslm1, as.data.frame(test))
+forecast2 <- forecast::forecast(tslm2, as.data.frame(test))
 forecast3 <- forecast(hw, h = dim(test)[1])
 forecast4 <- forecast(arima, h = dim(test)[1])
 
